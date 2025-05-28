@@ -1,7 +1,14 @@
+# Allow all web crawlers
 User-agent: *
 Allow: /
 
-Sitemap: https://yourdomain.com/sitemap.xml
+# Sitemap location
+Sitemap: https://bjandcomarketing.vercel.app/sitemap.xml
 
-# Optimize crawling
+# Disallow specific paths
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+
+# Crawl-delay
 Crawl-delay: 10 
