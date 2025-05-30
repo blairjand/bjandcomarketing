@@ -35,22 +35,19 @@ export default function Footer() {
       icon: <Facebook className="w-5 h-5" />, 
       url: 'https://www.facebook.com/blairjand', 
       label: 'Facebook',
-      defaultStyle: 'bg-[#1E1E1E]',
-      hoverStyle: 'hover:bg-[#1877F2]'
+      hoverColor: 'group-hover:bg-[#1877F2]'
     },
     { 
       icon: <Instagram className="w-5 h-5" />, 
       url: 'https://www.instagram.com/blairjand', 
       label: 'Instagram',
-      defaultStyle: 'bg-[#1E1E1E]',
-      hoverStyle: 'hover:bg-[#E4405F]'
+      hoverColor: 'group-hover:bg-gradient-to-tr group-hover:from-[#FFD600] group-hover:via-[#FF0069] group-hover:to-[#9C17FF]'
     },
     { 
       icon: <Linkedin className="w-5 h-5" />, 
       url: 'https://www.linkedin.com/in/blairjand', 
       label: 'LinkedIn',
-      defaultStyle: 'bg-[#1E1E1E]',
-      hoverStyle: 'hover:bg-[#0A66C2]'
+      hoverColor: 'group-hover:bg-[#0A66C2]'
     }
   ];
 
@@ -69,17 +66,26 @@ export default function Footer() {
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`rounded-full p-3 sm:p-4
-                       ${social.defaultStyle}
-                       ${social.hoverStyle}
-                       transition-colors duration-300
-                       hover:scale-110 hover:-translate-y-1
-                       hover:shadow-lg`}
+              className="group relative"
               whileHover={{ scale: 1.1, y: -3 }}
               whileTap={{ scale: 0.95 }}
             >
-              <div className="text-white/70 transition-colors duration-300 hover:text-white">
-                {social.icon}
+              {/* Radiant Black Background */}
+              <div className={`absolute inset-0 rounded-full 
+                           bg-gradient-to-b from-zinc-800 to-black
+                           transition-all duration-300 group-hover:opacity-0`} />
+              
+              {/* Brand Color Background */}
+              <div className={`absolute inset-0 rounded-full opacity-0 
+                           ${social.hoverColor}
+                           transition-all duration-300 group-hover:opacity-100`} />
+              
+              {/* Icon Container */}
+              <div className="relative p-3 sm:p-4">
+                <div className="text-white/80 transition-colors duration-300 
+                             group-hover:text-white">
+                  {social.icon}
+                </div>
               </div>
             </motion.a>
           ))}
