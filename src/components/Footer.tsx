@@ -35,25 +35,22 @@ export default function Footer() {
       icon: <Facebook className="w-5 h-5" />, 
       url: 'https://www.facebook.com/blairjand', 
       label: 'Facebook',
-      gradient: 'bg-gradient-to-b from-white/10 to-transparent',
-      hoverGradient: 'hover:bg-gradient-to-b hover:from-white/20 hover:to-white/5',
-      iconColor: 'group-hover:text-white group-hover:drop-shadow-glow'
+      defaultStyle: 'bg-[#1E1E1E]',
+      hoverStyle: 'hover:bg-[#1877F2]'
     },
     { 
       icon: <Instagram className="w-5 h-5" />, 
       url: 'https://www.instagram.com/blairjand', 
       label: 'Instagram',
-      gradient: 'bg-gradient-to-tr from-white/10 via-white/5 to-transparent',
-      hoverGradient: 'hover:bg-gradient-to-tr hover:from-white/20 hover:via-white/10 hover:to-white/5',
-      iconColor: 'group-hover:text-white group-hover:drop-shadow-glow'
+      defaultStyle: 'bg-[#1E1E1E]',
+      hoverStyle: 'hover:bg-[#E4405F]'
     },
     { 
       icon: <Linkedin className="w-5 h-5" />, 
       url: 'https://www.linkedin.com/in/blairjand', 
       label: 'LinkedIn',
-      gradient: 'bg-gradient-to-b from-white/10 to-transparent',
-      hoverGradient: 'hover:bg-gradient-to-b hover:from-white/20 hover:to-white/5',
-      iconColor: 'group-hover:text-white group-hover:drop-shadow-glow'
+      defaultStyle: 'bg-[#1E1E1E]',
+      hoverStyle: 'hover:bg-[#0A66C2]'
     }
   ];
 
@@ -72,30 +69,25 @@ export default function Footer() {
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group relative p-3 sm:p-4 rounded-full border border-white/10
-                       transition-all duration-500
-                       hover:border-white/20 hover:scale-110 hover:-translate-y-1
-                       hover:shadow-[0_8px_32px_rgba(255,255,255,0.1)] 
-                       bg-black backdrop-blur-xl
-                       active:scale-95 touch:active:scale-95
-                       ${social.gradient} ${social.hoverGradient}`}
+              className={`rounded-full p-3 sm:p-4
+                       ${social.defaultStyle}
+                       ${social.hoverStyle}
+                       transition-colors duration-300
+                       hover:scale-110 hover:-translate-y-1
+                       hover:shadow-lg`}
               whileHover={{ scale: 1.1, y: -3 }}
               whileTap={{ scale: 0.95 }}
             >
-              <div className={`relative z-10 text-premium-gray-400 transition-all duration-300 ${social.iconColor}`}>
+              <div className="text-white/70 transition-colors duration-300 hover:text-white">
                 {social.icon}
               </div>
-              
-              {/* Premium Glow Effect */}
-              <div className="absolute inset-0 rounded-full bg-white/5 opacity-0 
-                           group-hover:opacity-100 blur-xl transition-opacity duration-500" />
             </motion.a>
           ))}
         </div>
       </div>
 
       {/* Navigation Links */}
-      <nav className="relative flex flex-wrap justify-center gap-6 sm:gap-8 py-6 border-t border-white/10">
+      <nav className="relative grid grid-cols-2 sm:flex sm:justify-center gap-4 sm:gap-8 px-6 py-8 border-t border-white/10">
         {navLinks.map((link) => (
           <Link
             key={link.label}

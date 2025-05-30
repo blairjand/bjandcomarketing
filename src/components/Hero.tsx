@@ -1,44 +1,121 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [hasVideoError, setHasVideoError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     setIsVisible(true);
+    
+    const playVideo = async () => {
+      try {
+        if (videoRef.current) {
+          // Preload the video
+          videoRef.current.load();
+          // Play immediately
+          const playPromise = videoRef.current.play();
+          if (playPromise !== undefined) {
+            playPromise.catch((error) => {
+              console.error('Playback error:', error);
+              // Retry playback on error
+              setTimeout(() => {
+                if (videoRef.current) {
+                  videoRef.current.play().catch(console.error);
+                }
+              }, 1000);
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error playing video:', error);
+        setHasVideoError(true);
+      }
+    };
+
+    // Start loading video as soon as component mounts
+    playVideo();
+
+    // Add visibility change handler
+    const handleVisibilityChange = () => {
+      if (!document.hidden && videoRef.current && videoRef.current.paused) {
+        videoRef.current.play().catch(console.error);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
       {/* Enhanced 4K Video Background */}
       <div className="absolute inset-0 w-full h-full">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          onLoadedData={() => setIsVideoLoaded(true)}
-          className={`object-cover w-full h-full transition-all duration-[2s] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isVideoLoaded ? 'opacity-85 blur-0 scale-[1.02]' : 'opacity-0 blur-sm scale-100'
-          }`}
-          style={{
-            filter: 'brightness(1) contrast(1.1) saturate(1.1)',
-            willChange: 'transform',
-            transform: 'translate3d(0, 0, 0)',
-          }}
-        >
-          <source src="/videos/hero-background.mp4" type="video/mp4" />
-        </video>
+        {!hasVideoError ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/videos/hero-background-poster.jpg"
+            onLoadedData={() => setIsVideoLoaded(true)}
+            onError={(e) => {
+              console.error('Video error:', e);
+              setHasVideoError(true);
+            }}
+            className={`object-cover w-full h-full transition-all duration-[2s] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              isVideoLoaded ? 'opacity-85 blur-0 scale-[1.02]' : 'opacity-0 blur-sm scale-100'
+            }`}
+            style={{
+              filter: 'brightness(1) contrast(1.1) saturate(1.1)',
+              willChange: 'transform',
+              transform: 'translate3d(0, 0, 0)',
+              // Add performance optimizations
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              WebkitTransform: 'translate3d(0, 0, 0)',
+              WebkitPerspective: '1000',
+            }}
+          >
+            {/* Add multiple source formats for better browser compatibility */}
+            <source src="/videos/hero-background.mp4" type="video/mp4" />
+            <source src="/videos/hero-background.webm" type="video/webm" />
+            Your browser does not support the video tag.
+          </video>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
+        )}
 
-        {/* Refined Gradient Overlays */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-black/30 via-black/20 to-black/40" />
+        {/* Loading State - Show only briefly */}
+        {!isVideoLoaded && !hasVideoError && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/90 transition-opacity duration-500">
+            <div className="w-8 h-8 border-2 border-white/40 border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
+        {/* Optimized Gradient Overlays */}
+        <div 
+          className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-black/30 via-black/20 to-black/40"
+          style={{ willChange: 'opacity' }}
+        />
         
-        {/* Enhanced Vignette */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/5 to-black/30" />
+        {/* Enhanced Vignette with Performance Optimization */}
+        <div 
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/5 to-black/30"
+          style={{ willChange: 'opacity' }}
+        />
 
-        {/* Minimal Glass Effect */}
-        <div className="absolute inset-0 backdrop-blur-[0.2px] bg-black/5" />
+        {/* Optimized Glass Effect */}
+        <div 
+          className="absolute inset-0 backdrop-blur-[0.2px] bg-black/5"
+          style={{ willChange: 'backdrop-filter' }}
+        />
       </div>
 
       {/* Content Container */}
