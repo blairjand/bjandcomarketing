@@ -1,182 +1,331 @@
-import { motion, useAnimationControls, useInView } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Quote } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // Expanded testimonials array with more stories
 const testimonials = [
   {
-    quote: "BJAND & CO transformed our business with their innovative solutions. Their strategic approach and dedication to excellence made all the difference.",
-    author: "Sarah Johnson",
-    position: "CEO, TechVision Inc.",
+    quote: "The brand identity BJAND & CO created for us perfectly captures our essence. The new logo and visual system increased our brand recognition by 85%, and our customer engagement has never been stronger.",
+    author: "Sarah Martinez",
+    position: "Marketing Director, EvoStyle",
     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200"
   },
   {
-    quote: "Working with BJAND & CO was a game-changer for our company. Their expertise in digital transformation helped us stay ahead of the competition.",
+    quote: "Their brand strategy transformed our market position. The comprehensive approach, from positioning to voice guidelines, helped us achieve a 120% increase in brand awareness and 45% growth in market share.",
     author: "Michael Chen",
-    position: "CTO, InnovateLabs",
+    position: "CEO, InnovateNow",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200"
   },
   {
-    quote: "The team at BJAND & CO consistently delivers exceptional results. Their commitment to quality and innovation is unmatched in the industry.",
+    quote: "The content development strategy revolutionized our storytelling. Our engagement rates increased by 300%, and our content consistently outperforms industry benchmarks across all platforms.",
     author: "Emily Rodriguez",
-    position: "Director of Operations, GlobalTech",
+    position: "Content Director, StoryBrand",
     image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=200"
   },
   {
-    quote: "Their creative approach revolutionized our brand identity. The results exceeded our expectations in every way.",
+    quote: "Their creative direction elevated our brand to new heights. The cohesive visual strategy increased our social media engagement by 250% and doubled our conversion rates.",
     author: "David Park",
-    position: "Marketing Director, Innovate Co",
+    position: "Creative Lead, VisualCraft",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
   },
   {
-    quote: "Exceptional service and remarkable results. BJAND & CO helped us achieve our digital transformation goals seamlessly.",
+    quote: "The digital management service transformed our online presence. Our website traffic increased by 180%, and our user engagement metrics improved across all digital platforms.",
     author: "Lisa Chen",
-    position: "Product Manager, FutureTech",
+    position: "Digital Director, TechFlow",
     image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=200"
   },
   {
-    quote: "Their strategic insights and innovative solutions helped us scale our operations globally. Truly outstanding partnership.",
+    quote: "Our brand identity refresh was a game-changer. The new visual system and guidelines helped us secure three major partnerships and increased our market valuation by 40%.",
     author: "James Wilson",
-    position: "COO, Global Solutions",
+    position: "Brand Manager, FutureScale",
     image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&q=80&w=200"
   },
   {
-    quote: "BJAND & CO's attention to detail and commitment to excellence made them the perfect partner for our digital journey.",
+    quote: "The social media strategy they developed as part of our brand strategy increased our following by 400% and generated a 200% rise in social media-driven sales.",
     author: "Maria Garcia",
-    position: "Digital Director, NextGen",
+    position: "Social Media Director, TrendSetters",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200"
   },
   {
-    quote: "They didn't just meet our expectations, they exceeded them. A truly transformative experience for our business.",
+    quote: "Their content development team created a video series that went viral, reaching 2M+ views and increasing our brand engagement by 500%. The ROI was exceptional.",
     author: "Alex Thompson",
-    position: "Founder, InnovateLabs",
+    position: "Head of Content, ViralWave",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
+  },
+  {
+    quote: "The creative direction for our rebranding campaign resulted in a 150% increase in brand recognition and helped us win three industry design awards.",
+    author: "Rachel Kim",
+    position: "Art Director, DesignPro",
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
+  },
+  {
+    quote: "Their digital management services improved our website performance by 200%. The enhanced UX led to a 75% increase in customer satisfaction scores.",
+    author: "Thomas Anderson",
+    position: "Tech Director, WebFlow",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200"
+  },
+  {
+    quote: "The brand strategy they developed helped us successfully enter three new markets. Our customer acquisition costs decreased by 40% while conversion rates doubled.",
+    author: "Sophie Martinez",
+    position: "Strategy Director, GrowthPro",
+    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&q=80&w=200"
+  },
+  {
+    quote: "Their content development approach transformed our B2B communication. Lead generation increased by 180% and our content engagement metrics tripled.",
+    author: "Kevin Zhang",
+    position: "B2B Content Lead, LeadGen",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200"
+  },
+  {
+    quote: "The creative direction for our product launches has been outstanding. Each campaign exceeded targets, with our latest launch generating 300% more buzz than projected.",
+    author: "Diana Patel",
+    position: "Product Marketing Head, LaunchPad",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200"
+  },
+  {
+    quote: "Their digital management team revolutionized our e-commerce platform. Mobile conversions increased by 150% and cart abandonment reduced by 45%.",
+    author: "Marcus Johnson",
+    position: "E-commerce Director, ShopTech",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
+  },
+  {
+    quote: "The integrated brand strategy and social media campaign they created resulted in a 250% increase in engagement and a 180% boost in qualified leads.",
+    author: "Laura Williams",
+    position: "Marketing Head, SocialGrowth",
+    image: "https://images.unsplash.com/photo-1598550874175-4d0ef436c909?auto=format&fit=crop&q=80&w=200"
   }
 ];
 
-// Duplicate array for smooth infinite scroll
-const duplicatedTestimonials = [...testimonials, ...testimonials];
-
 export default function Testimonials() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const controls = useAnimationControls();
-  const isInView = useInView(containerRef);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [direction, setDirection] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? '100%' : '-100%',
+      opacity: 0,
+      scale: 0.95
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      scale: 1
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? '100%' : '-100%',
+      opacity: 0,
+      scale: 0.95
+    })
+  };
+
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
+
+  const paginate = useCallback((newDirection: number) => {
+    setDirection(newDirection);
+    if (newDirection > 0) {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    } else {
+      setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    }
+  }, []);
 
   useEffect(() => {
-    if (isInView && !isPaused) {
-      controls.start({
-        x: [0, -100 * testimonials.length + '%'],
-        transition: {
-          x: {
-            repeat: Infinity,
-            repeatType: "loop",
-            duration: 120, // Even slower animation (2 minutes per cycle)
-            ease: "linear"
-          }
-        }
-      });
-    } else {
-      controls.stop();
+    let timeout: number;
+    
+    if (!isPaused) {
+      timeout = setTimeout(() => {
+        setDirection(1);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+      }, 5000);
     }
-  }, [isInView, controls, isPaused]);
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [currentIndex, isPaused]);
+
+  const handleDragEnd = (_: never, info: PanInfo) => {
+    const swipe = swipePower(info.offset.x, info.velocity.x);
+    if (swipe < -swipeConfidenceThreshold) {
+      paginate(1);
+    } else if (swipe > swipeConfidenceThreshold) {
+      paginate(-1);
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEnd = e.changedTouches[0].clientX;
+    const touchDiff = touchStart - touchEnd;
+
+    if (Math.abs(touchDiff) > 50) {
+      paginate(touchDiff > 0 ? 1 : -1);
+    }
+  };
 
   return (
-    <div className="py-16 relative overflow-hidden bg-gradient-to-b from-black via-black/95 to-black">
-      {/* Soft gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.02] to-transparent pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Section Header */}
+    <div className="py-12 sm:py-16 md:py-20 lg:py-24 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center mb-12 md:mb-16"
         >
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-sm font-light tracking-[0.2em] text-white/60 uppercase"
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="text-sm md:text-base tracking-wider text-white/50 uppercase"
           >
-            Our Clients' Journey
+            Testimonials
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="text-3xl sm:text-4xl font-light mt-3 bg-clip-text text-transparent bg-gradient-to-b from-white via-white/90 to-white/80"
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-2xl sm:text-3xl md:text-4xl font-light mt-2 text-white/90"
           >
-            Success Stories
+            Client Stories
           </motion.h2>
         </motion.div>
 
-        {/* Carousel Container */}
         <div 
-          className="relative overflow-hidden" 
-          ref={containerRef}
+          className="relative overflow-hidden max-w-3xl mx-auto"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
-          {/* Gradient Overlays for fade effect */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black to-transparent z-10" />
-          
-          {/* Scrolling Content */}
-          <motion.div
-            animate={controls}
-            className="flex gap-4 py-6"
-            style={{ width: 'fit-content' }}
-          >
-            {duplicatedTestimonials.map((testimonial, index) => (
+          <div className="relative h-[280px] sm:h-[260px] md:h-[240px] flex items-center justify-center">
+            <AnimatePresence initial={false} mode="wait" custom={direction}>
               <motion.div
-                key={index}
-                className="w-[300px] flex-shrink-0 relative group"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
+                key={currentIndex}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { 
+                    type: "spring", 
+                    stiffness: 50,
+                    damping: 20,
+                    mass: 0.8,
+                    duration: 0.8
+                  },
+                  opacity: { 
+                    duration: 0.8,
+                    ease: [0.4, 0, 0.2, 1]
+                  },
+                  scale: {
+                    duration: 0.8,
+                    ease: [0.4, 0, 0.2, 1]
+                  }
+                }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.4}
+                onDragEnd={handleDragEnd}
+                className="absolute w-full px-4"
               >
-                <div className="h-full p-6 rounded-xl backdrop-blur-xl bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-white/10 
-                             hover:border-white/20 transition-all duration-500">
-                  {/* Premium Card Effect */}
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/[0.08] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  {/* Quote Icon */}
-                  <Quote className="w-5 h-5 text-white/10 mb-4" />
-                  
-                  {/* Content */}
-                  <div className="relative space-y-4">
-                    <blockquote className="text-sm text-white/80 group-hover:text-white/90 transition-colors duration-300 line-clamp-4">
-                      "{testimonial.quote}"
-                    </blockquote>
-                    
-                    <div className="flex items-center pt-3 border-t border-white/10">
-                      <div className="w-10 h-10 rounded-full overflow-hidden border border-white/20 group-hover:border-white/30 transition-colors">
+                <motion.div
+                  initial={{ scale: 0.96, opacity: 0.8 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.96, opacity: 0.8 }}
+                  transition={{
+                    duration: 0.8,
+                    ease: [0.4, 0, 0.2, 1]
+                  }}
+                  className="relative"
+                >
+                  <motion.div 
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -10, opacity: 0 }}
+                    transition={{ delay: 0.1, duration: 0.6 }}
+                    className="flex items-center justify-center mb-6 md:mb-8"
+                  >
+                    <Quote className="w-5 h-5 md:w-6 md:h-6 text-white/20" />
+                  </motion.div>
+                  <motion.blockquote 
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -10, opacity: 0 }}
+                    transition={{ delay: 0.2, duration: 0.6 }}
+                    className="text-center text-base sm:text-lg md:text-xl font-light leading-relaxed md:leading-relaxed text-white/80 mb-8 md:mb-10 px-4 sm:px-6 md:px-8"
+                  >
+                    "{testimonials[currentIndex].quote}"
+                  </motion.blockquote>
+                  <motion.div 
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -10, opacity: 0 }}
+                    transition={{ delay: 0.3, duration: 0.6 }}
+                    className="flex items-center justify-center"
+                  >
+                    <div className="relative">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden ring-1 ring-white/10 transition-transform duration-300 transform hover:scale-110">
                         <img
-                          src={testimonial.image}
-                          alt={testimonial.author}
+                          src={testimonials[currentIndex].image}
+                          alt={testimonials[currentIndex].author}
                           className="w-full h-full object-cover"
+                          loading="lazy"
                         />
                       </div>
-                      <div className="ml-3">
-                        <div className="text-sm text-white font-light">{testimonial.author}</div>
-                        <div className="text-xs text-white/60">{testimonial.position}</div>
+                    </div>
+                    <div className="ml-3 sm:ml-4 text-center">
+                      <div className="text-white/80 font-medium text-sm sm:text-base">
+                        {testimonials[currentIndex].author}
+                      </div>
+                      <div className="text-white/40 text-xs sm:text-sm mt-0.5 sm:mt-1">
+                        {testimonials[currentIndex].position}
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
               </motion.div>
-            ))}
-          </motion.div>
+            </AnimatePresence>
+          </div>
 
-          {/* Pause Indicator */}
-          <div 
-            className={`absolute bottom-2 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full text-xs text-white/60 
-                       backdrop-blur-sm bg-black/40 transition-opacity duration-300 ${isPaused ? 'opacity-100' : 'opacity-0'}`}
-          >
-            Hover to pause
+          {/* Enhanced pagination dots */}
+          <div className="flex justify-center gap-2 mt-8">
+            {testimonials.map((_, index) => (
+              <motion.button
+                key={index}
+                whileHover={{ scale: 1.3 }}
+                whileTap={{ scale: 0.8 }}
+                onClick={() => {
+                  setDirection(index > currentIndex ? 1 : -1);
+                  setCurrentIndex(index);
+                }}
+                className="group focus:outline-none"
+              >
+                <motion.div 
+                  animate={{
+                    scale: index === currentIndex ? 1.2 : 1,
+                    backgroundColor: index === currentIndex ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.2)"
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 group-hover:bg-white/40`}
+                />
+              </motion.button>
+            ))}
           </div>
         </div>
       </div>

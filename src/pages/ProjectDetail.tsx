@@ -45,7 +45,7 @@ const projectDetails: Record<ProjectId, {
       quote: "The new brand identity perfectly captures our vision of sustainable luxury. It's elevated our brand to new heights while staying true to our core values.",
       author: "Isabella Chen",
       position: "Creative Director, Luminary Fashion",
-      avatar: "/images/service-brand-identity/testimonial.jpg"
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200"
     },
     gallery: [
       {
@@ -82,7 +82,7 @@ const projectDetails: Record<ProjectId, {
       quote: "Their strategic approach transformed our brand from a local player to a global leader in sustainable living solutions.",
       author: "Marcus Green",
       position: "CEO, EcoVibe Living",
-      avatar: "/images/service-brand-strategy/testimonial.jpg"
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200"
     },
     gallery: [
       {
@@ -119,7 +119,7 @@ const projectDetails: Record<ProjectId, {
       quote: "Their content strategy revolutionized our brand voice and dramatically increased our audience engagement across all platforms.",
       author: "Sarah Martinez",
       position: "Head of Content, Mindful Media Co",
-      avatar: "/images/service-content-development/testimonial.jpg"
+      avatar: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=200"
     },
     gallery: [
       {
@@ -202,7 +202,7 @@ const projectDetails: Record<ProjectId, {
       quote: "Their digital management expertise has revolutionized our online presence and significantly expanded our global reach.",
       author: "Rachel Kim",
       position: "Digital Director, Future Forward Tech",
-      avatar: "/images/service-digital-management/testimonial.jpg"
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200"
     },
     gallery: [
       {
