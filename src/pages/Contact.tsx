@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 export default function Contact() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [focusedField, setFocusedField] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -11,8 +12,6 @@ export default function Contact() {
     subject: '',
     message: ''
   });
-
-  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,25 +47,25 @@ export default function Contact() {
   };
 
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
+      y: 0,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
+        duration: 0.6,
+        ease: [0.6, -0.05, 0.01, 0.99]
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
+    hidden: { opacity: 0, y: 10 },
+    visible: {
+      opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 10
+        duration: 0.6,
+        ease: [0.6, -0.05, 0.01, 0.99]
       }
     }
   };
@@ -159,6 +158,34 @@ export default function Contact() {
             <div className="glass-card relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent pointer-events-none" />
               
+              {/* Logo Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="flex justify-center mb-8 relative z-10"
+              >
+                <div className="relative group">
+                  {/* Logo Container with Premium Effects */}
+                  <div className="w-32 h-32 sm:w-40 sm:h-40 relative flex items-center justify-center">
+                    {/* Logo Background Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/20 to-white/10 rounded-full blur-2xl transform group-hover:scale-110 transition-transform duration-700 opacity-80" />
+                    
+                    {/* Logo Image */}
+                    <div className="relative z-10 w-full h-full p-2 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:drop-shadow-[0_0_25px_rgba(255,255,255,0.3)] transition-all duration-700">
+                      <img 
+                        src="/bjand-logo.jpg"
+                        alt="BJAND & CO. Logo"
+                        className="w-full h-full object-contain filter brightness-110 contrast-110 group-hover:brightness-125 group-hover:contrast-125 transition-all duration-700 rounded-lg"
+                        style={{
+                          filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.15))'
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
               <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <motion.div
@@ -168,10 +195,10 @@ export default function Contact() {
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent rounded-xl -z-10 
-                                group-hover:from-white/[0.08] group-hover:to-white/[0.02] transition-all duration-300" />
+                                  group-hover:from-white/[0.08] group-hover:to-white/[0.02] transition-all duration-300" />
                     <div className="p-1 relative">
                       <User className="w-5 h-5 text-white/40 group-hover:text-white/60 
-                                  group-focus-within:text-white transition-colors absolute left-3 top-1/2 -translate-y-1/2" />
+                                    group-focus-within:text-white transition-colors absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
                         name="name"
@@ -181,9 +208,10 @@ export default function Contact() {
                         onBlur={() => setFocusedField(null)}
                         placeholder="Your name"
                         className="w-full bg-white/[0.03] pl-10 pr-4 py-3 rounded-lg text-white text-sm
-                                placeholder:text-white/40 focus:outline-none focus:ring-1 ring-white/20
-                                transition-all duration-300 focus:bg-white/[0.05]"
+                                  placeholder:text-white/40 focus:outline-none focus:ring-1 ring-white/20
+                                  transition-all duration-300 focus:bg-white/[0.05]"
                         required
+                        aria-label="Name"
                       />
                     </div>
                   </motion.div>
@@ -195,10 +223,10 @@ export default function Contact() {
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent rounded-xl -z-10 
-                                group-hover:from-white/[0.08] group-hover:to-white/[0.02] transition-all duration-300" />
+                                  group-hover:from-white/[0.08] group-hover:to-white/[0.02] transition-all duration-300" />
                     <div className="p-1 relative">
                       <Mail className="w-5 h-5 text-white/40 group-hover:text-white/60 
-                                  group-focus-within:text-white transition-colors absolute left-3 top-1/2 -translate-y-1/2" />
+                                    group-focus-within:text-white transition-colors absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         type="email"
                         name="email"
@@ -208,9 +236,10 @@ export default function Contact() {
                         onBlur={() => setFocusedField(null)}
                         placeholder="Your email"
                         className="w-full bg-white/[0.03] pl-10 pr-4 py-3 rounded-lg text-white text-sm
-                                placeholder:text-white/40 focus:outline-none focus:ring-1 ring-white/20
-                                transition-all duration-300 focus:bg-white/[0.05]"
+                                  placeholder:text-white/40 focus:outline-none focus:ring-1 ring-white/20
+                                  transition-all duration-300 focus:bg-white/[0.05]"
                         required
+                        aria-label="Email"
                       />
                     </div>
                   </motion.div>
@@ -223,7 +252,7 @@ export default function Contact() {
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent rounded-xl -z-10 
-                              group-hover:from-white/[0.08] group-hover:to-white/[0.02] transition-all duration-300" />
+                                group-hover:from-white/[0.08] group-hover:to-white/[0.02] transition-all duration-300" />
                   <div className="p-1 relative">
                     <Phone className="w-5 h-5 text-white/40 group-hover:text-white/60 
                                   group-focus-within:text-white transition-colors absolute left-3 top-1/2 -translate-y-1/2" />
@@ -236,8 +265,9 @@ export default function Contact() {
                       onBlur={() => setFocusedField(null)}
                       placeholder="Your phone (optional)"
                       className="w-full bg-white/[0.03] pl-10 pr-4 py-3 rounded-lg text-white text-sm
-                              placeholder:text-white/40 focus:outline-none focus:ring-1 ring-white/20
-                              transition-all duration-300 focus:bg-white/[0.05]"
+                                placeholder:text-white/40 focus:outline-none focus:ring-1 ring-white/20
+                                transition-all duration-300 focus:bg-white/[0.05]"
+                      aria-label="Phone"
                     />
                   </div>
                 </motion.div>
@@ -249,7 +279,7 @@ export default function Contact() {
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent rounded-xl -z-10 
-                              group-hover:from-white/[0.08] group-hover:to-white/[0.02] transition-all duration-300" />
+                                group-hover:from-white/[0.08] group-hover:to-white/[0.02] transition-all duration-300" />
                   <div className="p-1 relative">
                     <MessageSquare className="w-5 h-5 text-white/40 group-hover:text-white/60 
                                         group-focus-within:text-white transition-colors absolute left-3 top-1/2 -translate-y-1/2" />
@@ -262,9 +292,10 @@ export default function Contact() {
                       onBlur={() => setFocusedField(null)}
                       placeholder="Subject"
                       className="w-full bg-white/[0.03] pl-10 pr-4 py-3 rounded-lg text-white text-sm
-                              placeholder:text-white/40 focus:outline-none focus:ring-1 ring-white/20
-                              transition-all duration-300 focus:bg-white/[0.05]"
+                                placeholder:text-white/40 focus:outline-none focus:ring-1 ring-white/20
+                                transition-all duration-300 focus:bg-white/[0.05]"
                       required
+                      aria-label="Subject"
                     />
                   </div>
                 </motion.div>
@@ -276,7 +307,7 @@ export default function Contact() {
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent rounded-xl -z-10 
-                              group-hover:from-white/[0.08] group-hover:to-white/[0.02] transition-all duration-300" />
+                                group-hover:from-white/[0.08] group-hover:to-white/[0.02] transition-all duration-300" />
                   <div className="p-1">
                     <textarea
                       name="message"
@@ -287,9 +318,10 @@ export default function Contact() {
                       placeholder="Your message"
                       rows={5}
                       className="w-full bg-white/[0.03] px-4 py-3 rounded-lg text-white text-sm
-                              placeholder:text-white/40 focus:outline-none focus:ring-1 ring-white/20
-                              transition-all duration-300 focus:bg-white/[0.05] resize-none"
+                                placeholder:text-white/40 focus:outline-none focus:ring-1 ring-white/20
+                                transition-all duration-300 focus:bg-white/[0.05] resize-none"
                       required
+                      aria-label="Message"
                     />
                   </div>
                 </motion.div>
@@ -301,7 +333,8 @@ export default function Contact() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className="w-full bg-gradient-to-r from-white/[0.9] via-white/[0.85] to-white/[0.8] backdrop-blur-sm 
-                            text-black py-4 px-6 rounded-xl font-medium relative overflow-hidden group"
+                            text-black py-4 px-6 rounded-xl font-medium relative overflow-hidden group
+                            disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/50 to-white/0 
                                 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform 
@@ -343,6 +376,7 @@ export default function Contact() {
                         exit={{ opacity: 0, y: -10 }}
                         className="absolute -bottom-12 left-0 right-0 text-center text-green-400 text-sm
                                 bg-green-400/[0.03] py-2 px-4 rounded-lg backdrop-blur-sm border border-green-400/20"
+                        role="alert"
                       >
                         Message sent successfully!
                       </motion.div>
@@ -355,6 +389,7 @@ export default function Contact() {
                         exit={{ opacity: 0, y: -10 }}
                         className="absolute -bottom-12 left-0 right-0 text-center text-red-400 text-sm
                                 bg-red-400/[0.03] py-2 px-4 rounded-lg backdrop-blur-sm border border-red-400/20"
+                        role="alert"
                       >
                         Failed to send message. Please try again.
                       </motion.div>

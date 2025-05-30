@@ -1,11 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Instagram, Facebook, Linkedin, ArrowUp } from 'lucide-react';
 import Footer from './Footer';
 import LoadingScreen from './LoadingScreen';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -342,4 +346,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
     </>
   );
-} 
+};
+
+export default Layout; 
