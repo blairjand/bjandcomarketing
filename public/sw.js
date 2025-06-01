@@ -1,18 +1,21 @@
 const CACHE_NAME = 'bjandco-cache-v1';
-const ASSETS_TO_CACHE = [
+const urlsToCache = [
   '/',
   '/index.html',
-  '/favicon.svg',
   '/manifest.json',
+  '/favicon.svg',
+  '/bjand-logo.jpg',
+  '/icon-192x192.png',
+  '/icon-512x512.png',
   '/assets/images/og-image.webp',
+  '/videos/hero-background.mp4'
 ];
 
 // Install service worker and cache assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(urlsToCache))
   );
 });
 
@@ -31,33 +34,42 @@ self.addEventListener('activate', (event) => {
 
 // Fetch assets from cache or network
 self.addEventListener('fetch', (event) => {
+  // Skip chrome-extension requests
+  if (event.request.url.startsWith('chrome-extension://')) {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Return cached response if found
-      if (response) {
-        return response;
-      }
-
-      // Clone the request because it can only be used once
-      const fetchRequest = event.request.clone();
-
-      // Make network request and cache the response
-      return fetch(fetchRequest).then((response) => {
-        // Check if response is valid
-        if (!response || response.status !== 200 || response.type !== 'basic') {
+    caches.match(event.request)
+      .then((response) => {
+        if (response) {
           return response;
         }
 
-        // Clone the response because it can only be used once
-        const responseToCache = response.clone();
+        // Clone the request because it's a stream and can only be consumed once
+        const fetchRequest = event.request.clone();
 
-        // Cache the response
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
+        return fetch(fetchRequest).then(
+          (response) => {
+            // Check if we received a valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
 
-        return response;
-      });
-    })
+            // Clone the response because it's a stream and can only be consumed once
+            const responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                // Only cache same-origin requests
+                if (event.request.url.startsWith(self.location.origin)) {
+                  cache.put(event.request, responseToCache);
+                }
+              });
+
+            return response;
+          }
+        );
+      })
   );
 }); 
