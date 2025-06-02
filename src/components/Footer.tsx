@@ -147,7 +147,7 @@ export default function Footer() {
 
       {/* WhatsApp Floating Button */}
       <motion.a
-        href="https://wa.me/+996123456789"
+        href="https://wa.me/+96894689774"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 left-6 z-50 group sm:bottom-8 sm:left-8"
