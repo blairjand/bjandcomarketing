@@ -1,49 +1,23 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 
 export default function Hero(): JSX.Element {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    // Video loading and error handling
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleError = (e: Event) => {
-      console.error('Video loading error:', e);
-      // Attempt to reload the video
-      video.load();
-    };
-
-    video.addEventListener('error', handleError);
-
-    // Cleanup
-    return () => {
-      video.removeEventListener('error', handleError);
-    };
-  }, []);
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-      {/* Video Background */}
+      {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="object-cover w-full h-full opacity-50"
-        >
-          <source src={`${import.meta.env.BASE_URL}videos/hero-background.mp4`} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <img
+          src="/images/hero/astronaut-space.jpg"
+          alt="Astronaut floating in space"
+          className="object-cover w-full h-full opacity-100"
+          loading="eager"
+        />
 
         {/* Premium Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/50 to-black/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50" />
         
         {/* Subtle Vignette Effect */}
-        <div className="absolute inset-0 bg-radial-gradient" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent via-black/10 to-black/40" />
       </div>
 
       {/* Content Container */}
